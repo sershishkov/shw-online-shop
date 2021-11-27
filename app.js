@@ -1,8 +1,10 @@
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
+const csrf = require('csurf');
 
 const db = require('./data/database');
+const addCsrfTokenMiddleware = require('./middlewares/csrf-token');
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -15,6 +17,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
+
+app.use(csrf());
+app.use(addCsrfTokenMiddleware);
 
 app.use(authRoutes);
 
