@@ -1,4 +1,11 @@
+main {
+  margin-top: 6rem;
+}
+
 #main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   max-width: 60rem;
   height: 5rem;
@@ -10,6 +17,9 @@
   border-bottom: 1px solid var(--color-primary-500);
   background-color: var(--color-gray-500);
 }
+#main-header nav {
+  display: none;
+}
 
 #logo a {
   font-weight: bold;
@@ -17,12 +27,26 @@
 }
 
 .nav-items {
+  height: 100%;
   display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
 }
 
 .nav-items li {
   margin: 0 var(--space-2);
+}
+
+.nav-items button {
+  cursor: pointer;
+  font: inherit;
+  border: 1px solid var(--color-primary-100);
+  border-radius: var(--border-radius-small);
+  background-color: transparent;
+  /* color: var(--color-primary-500); */
+  padding: var(--space-2) var(--space-4);
 }
 
 #mobile-menu-btn {
@@ -34,6 +58,7 @@
   width: 2.25rem;
   height: 2.25rem;
   background-color: transparent;
+
   padding: 0;
 }
 
@@ -41,4 +66,67 @@
   width: 2.25rem;
   height: 0.2rem;
   background-color: var(--color-gray-100);
+}
+
+#mobile-menu {
+  position: fixed;
+  top: 5rem;
+  left: 0;
+  height: calc(100vh - 5rem);
+  width: 100%;
+  background-color: var(--color-gray-700);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#mobile-menu nav {
+  height: 20rem;
+  width: 90%;
+  margin: var(--space-4) auto;
+}
+
+#mobile-menu .nav-items a,
+#mobile-menu .nav-items button {
+  font-size: 1.75rem;
+  color: var(--color-primary-100);
+}
+
+@media (min-width: 48rem) {
+  main {
+    margin-top: 0;
+  }
+
+  #main-header {
+    position: static;
+  }
+  #main-header nav {
+    display: block;
+  }
+
+  .nav-items button {
+    color: var(--color-primary-500);
+    border-color: var(--color-primary-500);
+  }
+
+  #mobile-menu-btn {
+    display: none;
+  }
+
+  #mobile-menu {
+    display: none;
+  }
+
+  .nav-items {
+    flex-direction: row;
+  }
+  .nav-items a {
+    border-radius: var(--border-radius-small);
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .nav-items a:hover,
+  .nav-items a:active {
+    background-color: var(--color-primary-500-bg);
+  }
 }
