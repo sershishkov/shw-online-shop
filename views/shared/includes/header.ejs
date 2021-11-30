@@ -4,6 +4,20 @@
   </div>
   <nav>
     <ul>
+      <% if (!locals.isAdmin) { %>
+        <li><a href="/">Shop</a></li>
+        <li><a href="/cart">Cart</a></li>
+      <% } %>
+ 
+      <% if (locals.isAuth && !locals.isAdmin) { %>
+        <li><a href="/orders">Orders</a></li>
+      <% } %>
+
+      <% if (locals.isAdmin) { %>
+        <li><a href="/admin/products">Manage products</a></li>
+        <li><a href="/admin/orders">Manage orders</a></li>
+      <% } %>
+
       <% if (locals.isAuth) { %>       
         <li>
           <form action="/logout" method="POST">
@@ -12,6 +26,7 @@
           </form>
         </li>
       <% } else { %>
+        
         <li>
           <a href="/login">Login</a>
         </li>
