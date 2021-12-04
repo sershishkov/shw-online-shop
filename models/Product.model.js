@@ -9,9 +9,8 @@ class Product {
     this.price = +productData.price;
     this.description = productData.description;
     this.image = productData.image;
-    this.imagePath = `product-data/images/${productData.image}`;
-    this.imageUrl = `/products/assets/images/${productData.image}`;
-    this.id = productData._id ? productData._id.toString() : '';
+    this.updateImageData();
+    this.id = productData._id ? productData._id.toString() : undefined;
   }
 
   static async findById(productId) {
@@ -33,7 +32,7 @@ class Product {
       throw error;
     }
 
-    return product;
+    return new Product(product);
   }
 
   static async findAll() {
@@ -48,6 +47,11 @@ class Product {
     });
   }
 
+  updateImageData() {
+    this.imagePath = `product-data/images/${this.image}`;
+    this.imageUrl = `/products/assets/images/${this.image}`;
+  }
+
   async save() {
     const productData = {
       title: this.title,
@@ -56,7 +60,26 @@ class Product {
       description: this.description,
       image: this.image,
     };
-    await db.getDb().collection('products').insertOne(productData);
+
+    if (this.id) {
+      const productId = new mongodb.ObjectId(this.id);
+
+      if (!this.image) {
+        delete productData.image;
+      }
+
+      await db
+        .getDb()
+        .collection('products')
+        .updateOne({ _id: productId }, { $set: productData });
+    } else {
+      await db.getDb().collection('products').insertOne(productData);
+    }
+  }
+
+  replaceImage(newImage) {
+    this.image = newImage;
+    this.updateImageData();
   }
 }
 
