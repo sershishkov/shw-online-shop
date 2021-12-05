@@ -2,8 +2,11 @@ const Product = require('../models/Product.model');
 
 async function addCartItem(req, res, next) {
   let product;
+  // console.log('req.body.productId??', req.body.productId);
+  // console.log('req.body._csrf??', req.body._csrf);
   try {
     product = await Product.findById(req.body.productId);
+    // console.log(product);
   } catch (error) {
     next(error);
     return;

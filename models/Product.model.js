@@ -16,7 +16,11 @@ class Product {
   static async findById(productId) {
     let prodId;
     try {
-      prodId = new mongodb.ObjectId(productId);
+      // let hex = /[0-9A-Fa-f]{6}/g;
+      // prodId = hex.test(productId)
+      //   ? new mongodb.ObjectId(productId)
+      //   : productId;
+      prodId = new mongodb.ObjectId(productId.trim());
     } catch (error) {
       error.code = 404;
       throw error;
@@ -25,6 +29,8 @@ class Product {
       .getDb()
       .collection('products')
       .findOne({ _id: prodId });
+
+    // console.log('FIND PRODUCT', product);
 
     if (!product) {
       const error = new Error(`Could not find product with provided id.`);
