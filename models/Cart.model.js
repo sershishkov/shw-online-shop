@@ -15,7 +15,7 @@ class Cart {
     for (let index = 0; index < this.items.length; index++) {
       const item = this.items[index];
       if (item.product.id === product.id) {
-        cartItem.quantity = item.quantity + 1;
+        cartItem.quantity = +item.quantity + 1;
         cartItem.totalPrice = item.totalPrice + product.price;
         this.items[index] = cartItem;
 
@@ -32,19 +32,19 @@ class Cart {
   updateItem(productId, newQuantaty) {
     for (let index = 0; index < this.items.length; index++) {
       const item = this.items[index];
-      if (item.product.id === productId && newQuantaty > 0) {
+      if (item.product.id === productId && +newQuantaty > 0) {
         const cartItem = { ...item };
-        const quantityChange = newQuantaty - item.quantity;
-        cartItem.quantity = newQuantaty;
-        cartItem.totalPrice = newQuantaty * product.price;
+        const quantityChange = +newQuantaty - item.quantity;
+        cartItem.quantity = +newQuantaty;
+        cartItem.totalPrice = +newQuantaty * item.product.price;
         this.items[index] = cartItem;
 
         this.totalQuantity = this.totalQuantity + quantityChange;
-        this.totalPrice += quantityChange * product.price;
+        this.totalPrice += quantityChange * item.product.price;
         return {
           updatedItemPrice: cartItem.totalPrice,
         };
-      } else if (item.product.id === productId && newQuantaty <= 0) {
+      } else if (item.product.id === productId && +newQuantaty <= 0) {
         this.items.splice(index, 1);
 
         this.totalQuantity = this.totalQuantity - item.quantity;
