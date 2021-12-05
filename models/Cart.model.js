@@ -28,6 +28,33 @@ class Cart {
     this.totalQuantity++;
     this.totalPrice += product.price;
   }
+
+  updateItem(productId, newQuantaty) {
+    for (let index = 0; index < this.items.length; index++) {
+      const item = this.items[index];
+      if (item.product.id === productId && newQuantaty > 0) {
+        const cartItem = { ...item };
+        const quantityChange = newQuantaty - item.quantity;
+        cartItem.quantity = newQuantaty;
+        cartItem.totalPrice = newQuantaty * product.price;
+        this.items[index] = cartItem;
+
+        this.totalQuantity = this.totalQuantity + quantityChange;
+        this.totalPrice += quantityChange * product.price;
+        return {
+          updatedItemPrice: cartItem.totalPrice,
+        };
+      } else if (item.product.id === productId && newQuantaty <= 0) {
+        this.items.splice(index, 1);
+
+        this.totalQuantity = this.totalQuantity - item.quantity;
+        this.totalPrice -= item.totalPrice;
+        return {
+          updatedItemPrice: 0,
+        };
+      }
+    }
+  }
 }
 
 module.exports = Cart;
