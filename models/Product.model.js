@@ -8,19 +8,17 @@ class Product {
     this.summary = productData.summary;
     this.price = +productData.price;
     this.description = productData.description;
-    this.image = productData.image;
+    this.image = productData.image; // the name of the image file
     this.updateImageData();
-    this.id = productData._id ? productData._id.toString() : undefined;
+    if (productData._id) {
+      this.id = productData._id.toString();
+    }
   }
 
   static async findById(productId) {
     let prodId;
     try {
-      // let hex = /[0-9A-Fa-f]{6}/g;
-      // prodId = hex.test(productId)
-      //   ? new mongodb.ObjectId(productId)
-      //   : productId;
-      prodId = new mongodb.ObjectId(productId.trim());
+      prodId = new mongodb.ObjectId(productId);
     } catch (error) {
       error.code = 404;
       throw error;
@@ -30,10 +28,8 @@ class Product {
       .collection('products')
       .findOne({ _id: prodId });
 
-    // console.log('FIND PRODUCT', product);
-
     if (!product) {
-      const error = new Error(`Could not find product with provided id.`);
+      const error = new Error('Could not find product with provided id.');
       error.code = 404;
       throw error;
     }
@@ -42,13 +38,25 @@ class Product {
   }
 
   static async findAll() {
-    const allProducts = await db
+    const products = await db.getDb().collection('products').find().toArray();
+
+    return products.map(function (productDocument) {
+      return new Product(productDocument);
+    });
+  }
+
+  static async findMultiple(ids) {
+    const productIds = ids.map(function (id) {
+      return new mongodb.ObjectId(id);
+    });
+
+    const products = await db
       .getDb()
       .collection('products')
-      .find()
+      .find({ _id: { $in: productIds } })
       .toArray();
 
-    return allProducts.map(function (productDocument) {
+    return products.map(function (productDocument) {
       return new Product(productDocument);
     });
   }
@@ -74,10 +82,12 @@ class Product {
         delete productData.image;
       }
 
-      await db
-        .getDb()
-        .collection('products')
-        .updateOne({ _id: productId }, { $set: productData });
+      await db.getDb().collection('products').updateOne(
+        { _id: productId },
+        {
+          $set: productData,
+        }
+      );
     } else {
       await db.getDb().collection('products').insertOne(productData);
     }
@@ -88,10 +98,9 @@ class Product {
     this.updateImageData();
   }
 
-  async remove() {
+  remove() {
     const productId = new mongodb.ObjectId(this.id);
-
-    await db.getDb().collection('products').deleteOne({ _id: productId });
+    return db.getDb().collection('products').deleteOne({ _id: productId });
   }
 }
 
