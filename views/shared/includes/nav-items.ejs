@@ -2,8 +2,8 @@
   <% if (!locals.isAdmin) { %>
     <li><a href="/">Shop</a></li>
     <li><a href="/cart">Cart <span class="badge">
-       <!-- <%= locals.cart.totalQuantity  %>  -->
-    0
+       <%= locals.cart.totalQuantity  %> 
+    
        </span> </a></li>
   <% } %>
 
